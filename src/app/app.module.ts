@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { StrengthPipe } from './pipes/strength/strength.pipe';
 import { PostsComponent } from './components/posts/posts/posts.component';
 import { HttpClientModule } from '@angular/common/http'
-import { PostService } from './services/post/post.service';
 import { PostComponent } from './components/post/post.component';
 
 @NgModule({
