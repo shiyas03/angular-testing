@@ -3,8 +3,9 @@ import { PostsComponent } from "./posts.component"
 import { of } from "rxjs"
 import { ComponentFixture, TestBed } from "@angular/core/testing"
 import { PostService } from "src/app/services/post/post.service"
-import { CUSTOM_ELEMENTS_SCHEMA, Component, Input } from "@angular/core"
+import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, NO_ERRORS_SCHEMA } from "@angular/core"
 import { By } from "@angular/platform-browser"
+import { PostComponent } from "../../post/post.component"
 
 // class mockPostService {
 //   getPosts() { }
@@ -21,13 +22,13 @@ describe('PostComponent', () => {
   // let postService: any
   let fixture: ComponentFixture<PostsComponent>
 
-  @Component({
-    selector: 'app-post',
-    template: '<div></div>'
-  })
-  class FakeComponent { 
-    @Input() post!:Post
-  }
+  // @Component({
+  //   selector: 'app-post',
+  //   template: '<div></div>'
+  // })
+  // class FakeComponent { 
+  //   @Input() post!:Post
+  // }
 
   beforeEach(() => {
     POSTS = [
@@ -45,7 +46,7 @@ describe('PostComponent', () => {
     mockPostService = jasmine.createSpyObj(['getPosts', 'deletePost'])
 
     TestBed.configureTestingModule({
-      declarations: [PostsComponent, FakeComponent],
+      declarations: [PostsComponent, PostComponent],
       providers: [
         {
           provide: PostService,
@@ -53,7 +54,7 @@ describe('PostComponent', () => {
           // useClass: mockPostService
         }
       ],
-      // schemas: [CUSTOM_ELEMENTS_SCHEMA]
+      schemas: [NO_ERRORS_SCHEMA]
     })
 
     // component = new PostsComponent(mockPostService)
@@ -77,6 +78,13 @@ describe('PostComponent', () => {
     let debugElement = fixture.debugElement
     let postElement = debugElement.queryAll(By.css('.posts'))
     expect(postElement.length).toBe(POSTS.length)
+  })
+
+  it('should create exact same number of post component in Posts',()=>{
+    mockPostService.getPosts.and.returnValue(of(POSTS))
+    fixture.detectChanges()
+    let postElementDEs = fixture.debugElement.queryAll(By.directive(PostComponent))
+    expect(postElementDEs.length).toEqual(POSTS.length)
   })
 
   describe('delete', () => {
