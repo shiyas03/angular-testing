@@ -3,7 +3,8 @@ import { PostsComponent } from "./posts.component"
 import { of } from "rxjs"
 import { ComponentFixture, TestBed } from "@angular/core/testing"
 import { PostService } from "src/app/services/post/post.service"
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core"
+import { CUSTOM_ELEMENTS_SCHEMA, Component, Input } from "@angular/core"
+import { By } from "@angular/platform-browser"
 
 // class mockPostService {
 //   getPosts() { }
@@ -19,6 +20,14 @@ describe('PostComponent', () => {
   let mockPostService: any
   // let postService: any
   let fixture: ComponentFixture<PostsComponent>
+
+  @Component({
+    selector: 'app-post',
+    template: '<div></div>'
+  })
+  class FakeComponent { 
+    @Input() post!:Post
+  }
 
   beforeEach(() => {
     POSTS = [
@@ -36,7 +45,7 @@ describe('PostComponent', () => {
     mockPostService = jasmine.createSpyObj(['getPosts', 'deletePost'])
 
     TestBed.configureTestingModule({
-      declarations: [PostsComponent],
+      declarations: [PostsComponent, FakeComponent],
       providers: [
         {
           provide: PostService,
@@ -44,7 +53,7 @@ describe('PostComponent', () => {
           // useClass: mockPostService
         }
       ],
-      schemas : [CUSTOM_ELEMENTS_SCHEMA]
+      // schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
 
     // component = new PostsComponent(mockPostService)
@@ -60,6 +69,14 @@ describe('PostComponent', () => {
     fixture.detectChanges()
     // component.ngOnInit()
     expect(component.posts.length).toBe(3)
+  })
+
+  it('should create one post child element for each post',()=>{
+    mockPostService.getPosts.and.returnValue(of(POSTS))
+    fixture.detectChanges()
+    let debugElement = fixture.debugElement
+    let postElement = debugElement.queryAll(By.css('.posts'))
+    expect(postElement.length).toBe(POSTS.length)
   })
 
   describe('delete', () => {
