@@ -1,22 +1,24 @@
 import { Post } from "src/app/models/post"
 import { PostsComponent } from "./posts.component"
 import { of } from "rxjs"
-import { TestBed } from "@angular/core/testing"
+import { ComponentFixture, TestBed } from "@angular/core/testing"
 import { PostService } from "src/app/services/post/post.service"
+import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core"
 
-class mockPostService {
-  getPosts() { }
+// class mockPostService {
+//   getPosts() { }
 
-  deletePost(post: Post) {
-    return of(true)
-  }
-}
+//   deletePost(post: Post) {
+//     return of(true)
+//   }
+// }
 
 describe('PostComponent', () => {
   let POSTS: Post[]
   let component: PostsComponent
-  // let mockPostService: any
-  let postService: any
+  let mockPostService: any
+  // let postService: any
+  let fixture: ComponentFixture<PostsComponent>
 
   beforeEach(() => {
     POSTS = [
@@ -31,29 +33,39 @@ describe('PostComponent', () => {
       },
     ]
 
-    // mockPostService = jasmine.createSpyObj(['getPosts', 'deletePost'])
+    mockPostService = jasmine.createSpyObj(['getPosts', 'deletePost'])
 
     TestBed.configureTestingModule({
+      declarations: [PostsComponent],
       providers: [
-        PostsComponent,
         {
           provide: PostService,
-          // useValue: mockPostService
-          useClass: mockPostService
+          useValue: mockPostService,
+          // useClass: mockPostService
         }
-      ]
+      ],
+      schemas : [CUSTOM_ELEMENTS_SCHEMA]
     })
 
     // component = new PostsComponent(mockPostService)
-    component = TestBed.inject(PostsComponent)
-    postService = TestBed.inject(PostService)
+    // component = TestBed.inject(PostsComponent)
+    // postService = TestBed.inject(PostService)
 
+    fixture = TestBed.createComponent(PostsComponent)
+    component = fixture.componentInstance
+  })
+
+  it('should test posts form the service directly', () => {
+    mockPostService.getPosts.and.returnValue(of(POSTS))
+    fixture.detectChanges()
+    // component.ngOnInit()
+    expect(component.posts.length).toBe(3)
   })
 
   describe('delete', () => {
 
     beforeEach(() => {
-      // postService.deletePost.and.returnValue(of(true))
+      mockPostService.deletePost.and.returnValue(of(true))
       component.posts = POSTS;
     })
 
@@ -72,9 +84,9 @@ describe('PostComponent', () => {
     })
 
     it('should call the delete method in post service only once', () => {
-      spyOn(postService, 'deletePost').and.callThrough()
+      // spyOn(postService, 'deletePost').and.callThrough()
       component.delete(POSTS[1])
-      expect(postService.deletePost).toHaveBeenCalledTimes(1)
+      expect(mockPostService.deletePost).toHaveBeenCalledTimes(1)
     })
   })
 })   
