@@ -87,6 +87,18 @@ describe('PostComponent', () => {
     expect(postElementDEs.length).toEqual(POSTS.length)
   })
 
+  it('should check whether exact post is sending to post component',()=>{
+    mockPostService.getPosts.and.returnValue(of(POSTS))
+    fixture.detectChanges()
+    let postComponentDEs = fixture.debugElement.queryAll(By.directive(PostComponent))
+
+    for (let i = 0; i < postComponentDEs.length; i++) {
+      let postComponent = postComponentDEs[i].componentInstance as PostComponent
+      expect(postComponent.post.title).toBe(POSTS[i].title)
+    }
+
+  })
+
   describe('delete', () => {
 
     beforeEach(() => {
