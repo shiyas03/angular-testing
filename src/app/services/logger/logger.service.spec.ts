@@ -1,14 +1,20 @@
+import { TestBed } from "@angular/core/testing"
 import { LoggerService } from "./logger.service"
 
-describe('LoggerService',()=>{
+describe('LoggerService', () => {
 
-  let service :LoggerService
-  beforeEach(()=>{
+  let service: LoggerService
+
+  beforeEach(() => {
     //arrange
-    service = new LoggerService
+    TestBed.configureTestingModule({
+      providers: [LoggerService]
+    })
+
+    service = TestBed.inject(LoggerService)
   })
 
-  it('should not have any messages at starting',()=>{
+  it('should not have any messages at starting', () => {
     //act
     let count = service.message.length
 
@@ -16,7 +22,7 @@ describe('LoggerService',()=>{
     expect(count).toBe(0)
   })
 
-  it('should add messages when log is called',()=>{
+  it('should add messages when log is called', () => {
     //act 
     service.log('message')
 
@@ -24,7 +30,7 @@ describe('LoggerService',()=>{
     expect(service.message.length).toBe(1)
   })
 
-  it('should clear all messages when clear called',()=>{
+  it('should clear all messages when clear called', () => {
     //arrange 
     service.message.push('message')
 
