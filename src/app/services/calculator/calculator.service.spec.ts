@@ -1,34 +1,59 @@
+import { TestBed } from "@angular/core/testing"
 import { LoggerService } from "../logger/logger.service"
 import { CalculatorService } from "./calculator.service"
 
-describe('Calculatorservice',()=>{
-
-  let mockloggerService : any
-  let calculator : any
-
-  beforeEach(()=>{
-    // console.log("before each");
-    mockloggerService = jasmine.createSpyObj('LoggerService',['log'])
-    calculator = new CalculatorService(mockloggerService)
+function setUp() {
+  let mockloggerService = jasmine.createSpyObj('LoggerService', ['log'])
+  TestBed.configureTestingModule({
+    providers: [CalculatorService, {
+      provide: LoggerService,
+      useValue: mockloggerService
+    }]
   })
+  let calculator = TestBed.inject(CalculatorService)
+  let loggerServiceSpy = TestBed.inject(LoggerService) as jasmine.SpyObj<LoggerService>
+  return { calculator, loggerServiceSpy }
+}
 
-  it('should add two number',()=>{
+describe('Calculatorservice', () => {
+
+  let loggerServiceSpy: jasmine.SpyObj<LoggerService>
+  let calculator: any
+
+  // beforeEach(() => {
+  //   // console.log("before each");
+  //   let mockloggerService = jasmine.createSpyObj('LoggerService', ['log'])
+  //   TestBed.configureTestingModule({
+  //     providers: [CalculatorService, {
+  //       provide: LoggerService,
+  //       useValue: mockloggerService
+  //     }]
+  //   })
+  //   // calculator = new CalculatorService(mockloggerService)
+  //   calculator = TestBed.inject(CalculatorService)
+  //   loggerServiceSpy = TestBed.inject(LoggerService) as jasmine.SpyObj<LoggerService>
+
+  // })
+
+  it('should add two number', () => {
     // console.log("add");
     // let mockloggerService = jasmine.createSpyObj('LoggerService',['log'])
     // spyOn(loggerService,'log')                  this will prevent execution each time
     // spyOn(loggerService,'log').and.callThrough()     this will spy and execute method
     // const calculator = new CalculatorService(mockloggerService)
-    let result = calculator.add(2,2)
+    const { calculator, loggerServiceSpy } = setUp()
+    let result = calculator.add(2, 2)
     expect(result).toBe(4)
-    expect(mockloggerService.log).toHaveBeenCalledTimes(1)
-  }) 
+    expect(loggerServiceSpy.log).toHaveBeenCalledTimes(1)
+  })
 
-  it('should substract two numbers',()=>{
+  it('should substract two numbers', () => {
     // console.log("subtract");
-    let result = calculator.substract(2,2)
-    expect(result).toBe(0)   
-    expect(mockloggerService.log).toHaveBeenCalledTimes(1)
-  }) 
+    const { calculator, loggerServiceSpy } = setUp()
+    let result = calculator.substract(2, 2)
+    expect(result).toBe(0)
+    expect(loggerServiceSpy.log).toHaveBeenCalledTimes(1)
+  })
 
   //xit used to disable execution temporarly 
   // xit('should do something',()=>{
