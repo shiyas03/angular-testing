@@ -19,12 +19,29 @@ describe('Http Client Module', () => {
     })
 
     it('should call the testUrl with get request', () => {
-        let testData: Data = { name: 'testing data' }
-        httpClient.get<Data>(testUrl).subscribe((data) => {
-            // expect(data).toEqual(testData)
+        // let testData: Data = { name: 'testing data' }
+        let testData: Data[] = [{ name: 'testing 1' }, { name: 'testing 2' }]
+
+        httpClient.get<Data[]>(testUrl).subscribe((data) => {
+            expect(data.length).toEqual(0)
         })
-        let request = httpTestingController.expectOne('/data')
-        request.flush(testData)
-        expect(request.request.method).toBe('GET')
+
+        httpClient.get<Data[]>(testUrl).subscribe((data) => {
+            expect(data).toEqual([testData[0]])
+        })
+
+        httpClient.get<Data[]>(testUrl).subscribe((data) => {
+            expect(data).toEqual(testData)
+        })
+
+        // let request = httpTestingController.expectOne('/data')
+        // request.flush(testData)
+        // expect(request.request.method).toBe('GET')
+
+        let request = httpTestingController.match('/data')
+        expect(request.length).toEqual(3)
+        request[0].flush([])
+        request[1].flush([testData[0]])
+        request[2].flush(testData)
     })
 })
