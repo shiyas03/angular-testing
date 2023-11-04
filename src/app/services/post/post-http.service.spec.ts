@@ -27,7 +27,7 @@ describe('Post Service HttpClientTestingModule', () => {
         httpTestingController = TestBed.inject(HttpTestingController)
     })
 
-    describe('getpost method',()=>{
+    describe('getPosts method',()=>{
         it('should return posts when getPosts is called',(done:DoneFn)=>{
             postService.getPosts().subscribe((data)=>{
                 expect(data).toEqual(POSTS)
@@ -36,6 +36,18 @@ describe('Post Service HttpClientTestingModule', () => {
             let request = httpTestingController.expectOne('http://jsonplaceholder.typicode.com/posts')
             request.flush(POSTS)
             expect(request.request.method).toBe('GET')
+        })
+    })
+
+    describe('getPost method',()=>{
+        it('should return single post when getPost is called with postid',()=>{
+            postService.getPost(1).subscribe()
+            let request = httpTestingController.expectOne('http://jsonplaceholder.typicode.com/posts/1')
+            expect(request.request.method).toBe('GET')
+        })
+
+        afterEach(()=>{
+            httpTestingController.verify()
         })
     })
 })
