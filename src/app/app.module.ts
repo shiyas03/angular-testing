@@ -7,18 +7,22 @@ import { StrengthPipe } from './pipes/strength/strength.pipe';
 import { PostsComponent } from './components/posts/posts/posts.component';
 import { HttpClientModule } from '@angular/common/http'
 import { PostComponent } from './components/post/post.component';
+import { PostDetailsComponent } from './components/post-details/post-details.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
     StrengthPipe,
     PostsComponent,
-    PostComponent
+    PostComponent,
+    PostDetailsComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

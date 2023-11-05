@@ -7,18 +7,22 @@ import { Post } from 'src/app/models/post';
 })
 export class PostService {
 
-  
-  constructor(private http:HttpClient) { }
 
-  getPosts(){
+  constructor(private http: HttpClient) { }
+
+  getPosts() {
     return this.http.get<Post[]>(`http://jsonplaceholder.typicode.com/posts`)
   }
 
-  getPost(postId:number){
-    return this.http.get<Post[]>(`http://jsonplaceholder.typicode.com/posts/${postId}`)
+  getPost(postId: number) {
+    return this.http.get<Post>(`http://jsonplaceholder.typicode.com/posts/${postId}`)
   }
 
-  deletePost(post:Post){
+  deletePost(post: Post) {
     return this.http.delete(`http://jsonplaceholder.typicode.com/post/${post.id}`)
+  }
+
+  updatePost(post: Post) {
+    return this.http.put(`http://jsonplaceholder.typicode.com/post/${post.id}`, post)
   }
 }
